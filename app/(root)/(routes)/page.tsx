@@ -1,7 +1,6 @@
 'use client';
 
 import { useStoreModal } from "@/hooks/use-store-modal";
-import prismadb from "@/lib/prismadb";
 import { useEffect } from "react";
 
 const SetupPage=()=>{
