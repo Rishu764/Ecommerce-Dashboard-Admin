@@ -1,22 +1,28 @@
 import prismadb from "@/lib/prismadb";
+import { redirect } from "next/navigation";
 
-interface DashboardPageProps {
-    params:{storeId:string}
+interface DashboardPageProps{
+    params:{storeId: string};
 }
-const DashboardPage: React.FC<DashboardPageProps> = async({
-    params
-}) => {
+
+const DashboardPage:React.FC<DashboardPageProps> = async({
+  params
+}) =>{
 
     const store = await prismadb.store.findFirst({
         where:{
-            id: params.storeId,
+            id:params.storeId
         }
-    })
+    });
+
+    if(!store){
+        redirect('/')
+    }
 
     return (
-        <div>
-           Active Store : {store?.name}
-        </div>
+        <>
+         Store : { store?.name}
+        </>
     )
 };
 
