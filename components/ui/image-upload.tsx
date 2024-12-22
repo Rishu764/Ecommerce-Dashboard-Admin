@@ -56,7 +56,7 @@ const ImageUpoad:React.FC<ImageUpoadProps> = ({
             ))
           }
          </div>
-         <CldUploadWidget onSuccess={onUpload} uploadPreset="fpansjmx">
+         <CldUploadWidget onSuccess={onUpload} uploadPreset="s19ferwr">
             {
                ({open}) =>{
                 const onClick = () => {

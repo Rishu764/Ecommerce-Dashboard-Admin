@@ -3,26 +3,30 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 export async function PATCH(req: Request,
-    { params }: { params: { billboardId: string, storeId: string } }) {
+    { params }: { params: { colorId: string, storeId: string } }) {
     try {
         const { userId } = auth();
         if (!userId) {
             return new NextResponse('Unauthorized', { status: 401 });
         }
 
+        console.log('here');
+
         const body = await req.json();
-        const { label, imageUrl } = body;
+        const { name, value } = body;
 
-        if (!label) {
-            return new NextResponse('Label is Required', { status: 400 });
+        console.log(params.colorId, params.storeId);
+
+        if (!name) {
+            return new NextResponse('Name is Required', { status: 400 });
         }
 
-        if (!imageUrl) {
-            return new NextResponse('Image Url is Required', { status: 400 });
+        if (!value) {
+            return new NextResponse('Value is Required', { status: 400 });
         }
 
-        if (!params.billboardId) {
-            return new NextResponse('Billboard id is Required', { status: 400 });
+        if (!params.colorId) {
+            return new NextResponse('Color id is Required', { status: 400 });
         }
 
         if (!params.storeId) {
@@ -40,26 +44,28 @@ export async function PATCH(req: Request,
             return new NextResponse('Unauthorized', { status: 403 });
         }
 
-        const billboard = await prismadb.billboard.updateMany({
+        const color = await prismadb.color.updateMany({
             where: {
-                id: params.billboardId,
+                id: params.colorId,
             },
             data: {
-                label,
-                imageUrl,
+                name,
+                value,
             }
         });
 
-        return NextResponse.json(billboard);
+        console.log(color)
+
+        return NextResponse.json(color);
     } catch (err) {
-        console.log('[BILLBOARD_PATCH]', err);
+        console.log('[COLOR_PATCH]', err);
         return new NextResponse('Internal Server Error', { status: 500 });
     }
 }
 
 export async function DELETE(
     req: Request,
-    { params }: { params: { billboardId: string, storeId: string } }) {
+    { params }: { params: { colorId: string, storeId: string } }) {
 
     const { userId } = auth();
     console.log('userId', userId, 'params', params);
@@ -67,8 +73,8 @@ export async function DELETE(
         return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    if (!params.billboardId) {
-        return new NextResponse('Billboard id is Required', { status: 400 });
+    if (!params.colorId) {
+        return new NextResponse('Color id is Required', { status: 400 });
     }
 
     if (!params.storeId) {
@@ -88,15 +94,15 @@ export async function DELETE(
             return new NextResponse('Unauthorized', { status: 403 });
         }
 
-        const billboard = await prismadb.billboard.deleteMany({
+        const color = await prismadb.color.deleteMany({
             where: {
-                id: params.billboardId,
+                id: params.colorId,
                 storeId: params.storeId
             }
         });
-        return NextResponse.json(billboard);
+        return NextResponse.json(color);
     } catch (err) {
-        console.log('[BILLBOARD_DELETE]', err);
+        console.log('[COLOR_DELETE]', err);
         return new NextResponse('Internal Server Error', { status: 500 });
     }
 
@@ -104,25 +110,25 @@ export async function DELETE(
 
 export async function GET(
     req: Request,
-    { params }: { params: { billboardId: string } }) {
+    { params }: { params: { colorId: string } }) {
 
 
 
-    if (!params.billboardId) {
-        return new NextResponse('Billboard id is Required', { status: 400 });
+    if (!params.colorId) {
+        return new NextResponse('Color id is Required', { status: 400 });
     }
 
 
     try {
 
-        const billboard = await prismadb.billboard.findUnique({
+        const color = await prismadb.color.findUnique({
             where: {
-                id: params.billboardId,
+                id: params.colorId,
             }
         });
-        return NextResponse.json(billboard);
+        return NextResponse.json(color);
     } catch (err) {
-        console.log('[BILLBOARD_GET]', err);
+        console.log('[COLOR_GET]', err);
         return new NextResponse('Internal Server Error', { status: 500 });
     }
 

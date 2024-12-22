@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 export async function PATCH(req: Request,
-    { params }: { params: { billboardId: string, storeId: string } }) {
+    { params }: { params: { sizeId: string, storeId: string } }) {
     try {
         const { userId } = auth();
         if (!userId) {
@@ -11,18 +11,18 @@ export async function PATCH(req: Request,
         }
 
         const body = await req.json();
-        const { label, imageUrl } = body;
+        const { name, value } = body;
 
-        if (!label) {
-            return new NextResponse('Label is Required', { status: 400 });
+        if (!name) {
+            return new NextResponse('Name is Required', { status: 400 });
         }
 
-        if (!imageUrl) {
-            return new NextResponse('Image Url is Required', { status: 400 });
+        if (!value) {
+            return new NextResponse('Value is Required', { status: 400 });
         }
 
-        if (!params.billboardId) {
-            return new NextResponse('Billboard id is Required', { status: 400 });
+        if (!params.sizeId) {
+            return new NextResponse('Size id is Required', { status: 400 });
         }
 
         if (!params.storeId) {
@@ -40,26 +40,26 @@ export async function PATCH(req: Request,
             return new NextResponse('Unauthorized', { status: 403 });
         }
 
-        const billboard = await prismadb.billboard.updateMany({
+        const size = await prismadb.size.updateMany({
             where: {
-                id: params.billboardId,
+                id: params.sizeId,
             },
             data: {
-                label,
-                imageUrl,
+                name,
+                value,
             }
         });
 
-        return NextResponse.json(billboard);
+        return NextResponse.json(size);
     } catch (err) {
-        console.log('[BILLBOARD_PATCH]', err);
+        console.log('[SIZE_PATCH]', err);
         return new NextResponse('Internal Server Error', { status: 500 });
     }
 }
 
 export async function DELETE(
     req: Request,
-    { params }: { params: { billboardId: string, storeId: string } }) {
+    { params }: { params: { sizeId: string, storeId: string } }) {
 
     const { userId } = auth();
     console.log('userId', userId, 'params', params);
@@ -67,8 +67,8 @@ export async function DELETE(
         return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    if (!params.billboardId) {
-        return new NextResponse('Billboard id is Required', { status: 400 });
+    if (!params.sizeId) {
+        return new NextResponse('Size id is Required', { status: 400 });
     }
 
     if (!params.storeId) {
@@ -88,15 +88,15 @@ export async function DELETE(
             return new NextResponse('Unauthorized', { status: 403 });
         }
 
-        const billboard = await prismadb.billboard.deleteMany({
+        const size = await prismadb.size.deleteMany({
             where: {
-                id: params.billboardId,
+                id: params.sizeId,
                 storeId: params.storeId
             }
         });
-        return NextResponse.json(billboard);
+        return NextResponse.json(size);
     } catch (err) {
-        console.log('[BILLBOARD_DELETE]', err);
+        console.log('[SIZE_DELETE]', err);
         return new NextResponse('Internal Server Error', { status: 500 });
     }
 
@@ -104,25 +104,25 @@ export async function DELETE(
 
 export async function GET(
     req: Request,
-    { params }: { params: { billboardId: string } }) {
+    { params }: { params: { sizeId: string } }) {
 
 
 
-    if (!params.billboardId) {
-        return new NextResponse('Billboard id is Required', { status: 400 });
+    if (!params.sizeId) {
+        return new NextResponse('Size id is Required', { status: 400 });
     }
 
 
     try {
 
-        const billboard = await prismadb.billboard.findUnique({
+        const size = await prismadb.size.findUnique({
             where: {
-                id: params.billboardId,
+                id: params.sizeId,
             }
         });
-        return NextResponse.json(billboard);
+        return NextResponse.json(size);
     } catch (err) {
-        console.log('[BILLBOARD_GET]', err);
+        console.log('[SIZE_GET]', err);
         return new NextResponse('Internal Server Error', { status: 500 });
     }
 
